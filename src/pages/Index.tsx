@@ -36,9 +36,12 @@ const Index = () => {
   <div className="container mx-auto px-4 py-6">
     
 <div className="w-full text-center mb-8 space-y-1">
-  <h1 className="text-4xl sm:text-5xl font-extrabold text-[#24346D] tracking-normal">
-    Academic Progress Tracker
+  <h1 className="text-4xl sm:text-5xl font-extrabold text-[#24346D] tracking-tight">
+    Teach Zari
   </h1>
+  <p className="text-lg sm:text-xl font-medium text-[#3B4C8A]">
+    Academic Progress Tracker
+  </p>
   <p className="text-sm italic text-[#5B6EA3] mt-2">
     developed by Krishna
   </p>
