@@ -33,7 +33,7 @@ const AdminControls: React.FC<AdminControlsProps> = ({ entries, onUpdateEntry, o
   const [editingEntry, setEditingEntry] = useState<ProgressEntry | null>(null);
 
   // Test passcode: admin123
-  const ADMIN_PASSCODE = 'lamani123';
+  const ADMIN_PASSCODE = 'zari123';
 
   const handleLogin = () => {
     if (passcode === ADMIN_PASSCODE) {
