@@ -36,7 +36,7 @@ const Index = () => {
   <div className="container mx-auto px-4 py-6">
     
 <div className="w-full text-center mb-8 space-y-1">
-  <h1 className="text-4xl sm:text-5xl font-extrabold text-[#24346D] tracking-tight">
+  <h1 className="text-4xl sm:text-5xl font-extrabold text-[#24346D] tracking - normal">
     Teach Zari
   </h1>
   <p className="text-lg sm:text-xl font-medium text-[#3B4C8A]">
