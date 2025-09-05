@@ -37,7 +37,7 @@ const AdminControls: React.FC<AdminControlsProps> = ({ entries, onUpdateEntry, o
   const [showInactive, setShowInactive] = useState(false);
 
   // Test passcode: admin123
-  const ADMIN_PASSCODE = 'lamani123';
+  const ADMIN_PASSCODE = 'zari123';
 
   const handleLogin = () => {
     if (passcode === ADMIN_PASSCODE) {
@@ -260,7 +260,7 @@ const AdminControls: React.FC<AdminControlsProps> = ({ entries, onUpdateEntry, o
     Delete Entries Before Selected Date
   </Button>
 </div>
-      {/* ✅ Collapsible Inactive Volunteers Section */}
+      /* {/* ✅ Collapsible Inactive Volunteers Section */}
     <Card className="bg-white/80 backdrop-blur-sm border-red-300 shadow-xl">
       <CardHeader
         onClick={() => setShowInactive(prev => !prev)}
@@ -288,7 +288,7 @@ const AdminControls: React.FC<AdminControlsProps> = ({ entries, onUpdateEntry, o
           )}
         </CardContent>
       )}
-    </Card>
+    </Card> */
 
     {/* Entries Management */}
     <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-xl">
