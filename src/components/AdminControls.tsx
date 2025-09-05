@@ -260,35 +260,7 @@ const AdminControls: React.FC<AdminControlsProps> = ({ entries, onUpdateEntry, o
     Delete Entries Before Selected Date
   </Button>
 </div>
-      /* {/* ✅ Collapsible Inactive Volunteers Section */}
-    <Card className="bg-white/80 backdrop-blur-sm border-red-300 shadow-xl">
-      <CardHeader
-        onClick={() => setShowInactive(prev => !prev)}
-        className="cursor-pointer flex items-center justify-between text-red-700"
-      >
-        <CardTitle className="flex items-center space-x-2">
-          <Shield className="h-5 w-5" />
-          <span>Inactive Volunteers (No Entry in Last 14 Days)</span>
-        </CardTitle>
-        <span className="text-sm">{showInactive ? "▲ Hide" : "▼ Show"}</span>
-      </CardHeader>
-
-      {showInactive && (
-        <CardContent className="p-4">
-          {inactiveVolunteers.length === 0 ? (
-            <p className="text-gray-500">✅ All volunteers are active.</p>
-          ) : (
-            <ul className="list-disc pl-5 space-y-1">
-              {inactiveVolunteers.map((name) => (
-                <li key={name} className="text-red-600 font-semibold">
-                  {name} <span className="text-xs text-red-500">(inactive 14+ days)</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </CardContent>
-      )}
-    </Card> */
+       
 
     {/* Entries Management */}
     <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-xl">
