@@ -8,7 +8,7 @@ import ExportData from '@/components/ExportData';
 import AdminControls from '@/components/AdminControls';
 
 const Index = () => {
-  const { entries, loading, error, addEntry, updateEntry, deleteEntry, clearOldEntries, refetch} = useProgressEntries();
+  const { entries, loading, error, addEntry, updateEntry, deleteEntry } = useProgressEntries();
   const [isAdmin] = useState(false); // Set to true for admin users
 
   if (loading) {
@@ -35,14 +35,14 @@ const Index = () => {
   <div className="container mx-auto px-4 py-6">
     
 <div className="w-full text-center mb-8 space-y-1">
-  <h1 className="text-4xl sm:text-5xl font-extrabold text-[#24346D] tracking-tight">
-    Project Lamani
+  <h1 className="text-4xl sm:text-5xl font-extrabold text-[#24346D] tracking - normal">
+    Teach Zari
   </h1>
   <p className="text-lg sm:text-xl font-medium text-[#3B4C8A]">
     Academic Progress Tracker
   </p>
   <p className="text-sm italic text-[#5B6EA3] mt-2">
-    ~ developed by Krishna
+    developed by Krishna
   </p>
 </div>
 
@@ -92,7 +92,6 @@ const Index = () => {
               entries={entries}
               onUpdateEntry={updateEntry}
               onDeleteEntry={deleteEntry}
-              clearOldEntries={clearOldEntries}
             />
           </TabsContent>
         </Tabs>
