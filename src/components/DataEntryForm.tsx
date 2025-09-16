@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar, Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,18 +8,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
-import { NotesPopup } from "@/components/NotesPopup";
 import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
 import { ProgressEntry } from '@/types/progressEntry';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
-
 
 interface FormSection {
   id: string;
@@ -163,9 +153,7 @@ const DataEntryForm: React.FC<DataEntryFormProps> = ({ onAddEntry, existingEntri
       });
       return;
     }
-// ✅ Normalize volunteer name (first letter capitalized)
-  const normalizedVolunteerName = volunteerName.trim().charAt(0).toUpperCase() +
-                                  volunteerName.trim().slice(1).toLowerCase();
+
     setSubmitting(true);
     
     try {
@@ -174,7 +162,7 @@ const DataEntryForm: React.FC<DataEntryFormProps> = ({ onAddEntry, existingEntri
         const entry = {
           date,
           day: getDayName(date),
-          volunteerName: normalizedVolunteerName,
+          volunteerName: volunteerName.trim(),
           kidsTaught: section.kidsTaught,
           class: section.class,
           topicTaught: section.topicTaught,
@@ -206,7 +194,7 @@ const DataEntryForm: React.FC<DataEntryFormProps> = ({ onAddEntry, existingEntri
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6 overflow-x-hidden">
+    <div className="space-y-4 sm:space-y-6">
       <Card className="bg-white/80 backdrop-blur-sm border-blue-200 shadow-xl">
         <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-t-lg">
           <CardTitle className="flex items-center space-x-2 text-lg sm:text-xl">
@@ -268,11 +256,7 @@ const DataEntryForm: React.FC<DataEntryFormProps> = ({ onAddEntry, existingEntri
                 disabled={submitting}
                 required
               />
-            
-
-            {/* 👇 Popup note for whole form */}
-  <NotesPopup storageKey={`form_notes_${format(date, "yyyy-MM-dd")}`} />
-</div>
+            </div>
 
             {/* Dynamic Sections */}
             {sections.map((section, index) => (
@@ -334,7 +318,7 @@ const DataEntryForm: React.FC<DataEntryFormProps> = ({ onAddEntry, existingEntri
                               addKid(section.id, currentKids[section.id] || '');
                             }
                           }}
-                          placeholder="Type student name and click(+)"
+                          placeholder="Type student name"
                           className="flex-1 text-sm sm:text-base"
                           disabled={submitting}
                         />
@@ -368,68 +352,19 @@ const DataEntryForm: React.FC<DataEntryFormProps> = ({ onAddEntry, existingEntri
                       )}
                     </div>
                   </div>
-                  
-  {/* Class */}
-<div className="space-y-2">
-  <Label>Class *</Label>
 
-  {/* 📱 Mobile (smaller than 640px): native select so it never pushes the layout */}
-  <div className="sm:hidden">
-    <select
-      value={section.class}
-      onChange={(e) => updateSection(section.id, "class", e.target.value)}
-      disabled={submitting}
-      required
-      className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring"
-    >
-      <option value="" disabled>Select Class</option>
-      <option value="Below 1st">Below 1st</option>
-      <option value="1st">1st</option>
-      <option value="2nd">2nd</option>
-      <option value="3rd">3rd</option>
-      <option value="4th">4th</option>
-      <option value="5th">5th</option>
-      <option value="6th">6th</option>
-      <option value="7th">7th</option>
-      <option value="8th">8th</option>
-      <option value="9th">9th</option>
-      <option value="10th">10th</option>
-    </select>
-  </div>
-
-  {/* 💻 Tablet/Desktop (>= sm): shadcn Select with the same style as ProfileTab */}
-  <div className="hidden sm:block">
-    <Select
-      value={section.class}
-      onValueChange={(val) => updateSection(section.id, "class", val)}
-      disabled={submitting}
-      required
-    >
-      <SelectTrigger className="w-full text-sm sm:text-base">
-        <SelectValue placeholder="Select Class" />
-      </SelectTrigger>
-      {/* Overlay menu; won't push layout */}
-      <SelectContent className="z-50 max-h-60 overflow-y-auto">
-        <SelectItem value="Below 1st">Below 1st</SelectItem>
-        <SelectItem value="1st">1st</SelectItem>
-        <SelectItem value="2nd">2nd</SelectItem>
-        <SelectItem value="3rd">3rd</SelectItem>
-        <SelectItem value="4th">4th</SelectItem>
-        <SelectItem value="5th">5th</SelectItem>
-        <SelectItem value="6th">6th</SelectItem>
-        <SelectItem value="7th">7th</SelectItem>
-        <SelectItem value="8th">8th</SelectItem>
-        <SelectItem value="9th">9th</SelectItem>
-        <SelectItem value="10th">10th</SelectItem>
-      </SelectContent>
-    </Select>
-  </div>
-{/* Disclaimer */}
-  <p className="text-xs text-gray-500">
-    ⚠️ You can only select one class at a time. To add multiple classes, use the "Add Section" tab below.
-  </p>
-</div>
-
+                  {/* Class */}
+                  <div className="space-y-2">
+                    <Label>Class *</Label>
+                    <Input
+                      value={section.class}
+                      onChange={(e) => updateSection(section.id, 'class', e.target.value)}
+                      placeholder="e.g., 4th"
+                      className="text-sm sm:text-base"
+                      disabled={submitting}
+                      required
+                    />
+                  </div>
 
                   {/* Topic Taught */}
                   <div className="space-y-2">
