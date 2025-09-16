@@ -1,74 +1,55 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { formatDateForStorage, createDateFromString } from '@/utils/dateUtils';
 import { ProgressEntry } from '@/types/progressEntry';
 
-const normalizeVolunteerName = (name: string) =>
-  name.trim().charAt(0).toUpperCase() + name.trim().slice(1).toLowerCase();
- 
 export const useProgressEntries = () => {
   const [entries, setEntries] = useState<ProgressEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-// Fetch entries with pagination (fetch ALL, not just 100)
-const fetchEntries = async () => {
-  try {
-    setLoading(true);
-
-    let allEntries: any[] = [];
-    let from = 0;
-    const batchSize = 1000;
-    let more = true;
-
-    while (more) {
+  // Fetch entries with pagination and optimized query
+  const fetchEntries = async (limit = 100) => {
+    try {
+      setLoading(true);
       const { data, error } = await supabase
-        .from("progress_entries")
-        .select("*")
-        .order("date", { ascending: false })
-        .order("created_at", { ascending: false })
-        .range(from, from + batchSize - 1);
+        .from('progress_entries')
+        .select('*')
+        .order('date', { ascending: false })
+        .order('created_at', { ascending: false })
+        .limit(limit);
 
       if (error) throw error;
 
-      if (!data || data.length === 0) {
-        more = false;
-      } else {
-        allEntries = [...allEntries, ...data];
-        from += batchSize;
-      }
-    }
-
-    const formattedEntries =
-      allEntries.map((entry) => ({
+      const formattedEntries = data?.map(entry => ({
         id: entry.id,
         date: createDateFromString(entry.date),
         day: entry.day,
-        volunteerName: normalizeVolunteerName(entry.volunteer_name || ""),
+        volunteerName: entry.volunteer_name || '',
         kidsTaught: entry.kids_taught || [],
         class: entry.class,
         topicTaught: entry.topic_taught,
-        homework: entry.homework || "",
+        homework: entry.homework || '',
         created_at: entry.created_at,
-        updated_at: entry.updated_at,
+        updated_at: entry.updated_at
       })) || [];
 
-    setEntries(formattedEntries);
-    setError(null);
-  } catch (err) {
-    console.error("Error fetching entries:", err);
-    setError("Failed to load entries");
-    toast({
-      title: "Error",
-      description: "Failed to load progress entries",
-      variant: "destructive",
-    });
-  } finally {
-    setLoading(false);
-  }
-};
-
+      setEntries(formattedEntries);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching entries:', err);
+      setError('Failed to load entries');
+      toast({
+        title: "Error",
+        description: "Failed to load progress entries",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Add new entry
   const addEntry = async (entry: Omit<ProgressEntry, 'id'>) => {
@@ -78,7 +59,7 @@ const fetchEntries = async () => {
       const insertData = {
         date: dateStr,
         day: entry.day,
-        volunteer_name: normalizeVolunteerName(entry.volunteerName),
+        volunteer_name: entry.volunteerName || '',
         kids_taught: entry.kidsTaught,
         class: entry.class,
         topic_taught: entry.topicTaught,
@@ -97,7 +78,7 @@ const fetchEntries = async () => {
         id: data.id,
         date: createDateFromString(data.date),
         day: data.day,
-        volunteerName: normalizeVolunteerName(data.volunteer_name || ''),
+        volunteerName: data.volunteer_name || '',
         kidsTaught: data.kids_taught || [],
         class: data.class,
         topicTaught: data.topic_taught,
@@ -124,7 +105,6 @@ const fetchEntries = async () => {
       throw err;
     }
   };
- 
 
   // Update entry
   const updateEntry = async (id: string, updates: Partial<ProgressEntry>) => {
@@ -138,8 +118,8 @@ const fetchEntries = async () => {
         updateData.day = updates.day;
       }
       if (updates.volunteerName !== undefined) {
-  updateData.volunteer_name = normalizeVolunteerName(updates.volunteerName);
-}
+        updateData.volunteer_name = updates.volunteerName;
+      }
       if (updates.kidsTaught) {
         updateData.kids_taught = updates.kidsTaught;
       }
@@ -166,7 +146,7 @@ const fetchEntries = async () => {
         id: data.id,
         date: createDateFromString(data.date),
         day: data.day,
-        volunteerName: normalizeVolunteerName(data.volunteer_name || ''),
+        volunteerName: data.volunteer_name || '',
         kidsTaught: data.kids_taught || [],
         class: data.class,
         topicTaught: data.topic_taught,
@@ -222,32 +202,6 @@ const fetchEntries = async () => {
       throw err;
     }
   };
-const clearOldEntries = async (cutoffDate: string) => {
-  try {
-    const cutoff = new Date(cutoffDate);
-
-    const entriesToDelete = entries.filter(
-      (entry) => new Date(entry.date) < cutoff
-    );
-
-    for (const entry of entriesToDelete) {
-      await deleteEntry(entry.id); // reuse your existing delete logic
-    }
-
-    toast({
-      title: "Entries Cleared",
-      description: `All entries before ${cutoffDate} have been deleted.`,
-      variant: "destructive",
-    });
-  } catch (err) {
-    console.error("Error clearing old entries:", err);
-    toast({
-      title: "Error",
-      description: "Failed to delete old entries",
-      variant: "destructive",
-    });
-  }
-};
 
   useEffect(() => {
     fetchEntries();
@@ -260,7 +214,6 @@ const clearOldEntries = async (cutoffDate: string) => {
     addEntry,
     updateEntry,
     deleteEntry,
-    refetch: fetchEntries,
-    clearOldEntries
+    refetch: fetchEntries
   };
 };
